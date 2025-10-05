@@ -1,0 +1,11 @@
+Model Information:
+* title:	Rouie (Arena Of Valor)
+* source:	https://sketchfab.com/3d-models/rouie-arena-of-valor-e7ba64ffd0a4493fac911191f35440fc
+* author:	topomega3 (https://sketchfab.com/topomega3)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Rouie (Arena Of Valor)" (https://sketchfab.com/3d-models/rouie-arena-of-valor-e7ba64ffd0a4493fac911191f35440fc) by topomega3 (https://sketchfab.com/topomega3) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

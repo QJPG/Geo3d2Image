@@ -1,0 +1,318 @@
+[gd_scene load_steps=21 format=3 uid="uid://vbfak4jg2hqd"]
+
+[ext_resource type="Texture2D" uid="uid://8xnmblex6fal" path="res://alert-icon.png" id="1_j6dmo"]
+[ext_resource type="Shader" uid="uid://bxiscnrfkjtop" path="res://Viewport.gdshader" id="1_qbwvd"]
+[ext_resource type="Script" uid="uid://bymcf4hyog7r5" path="res://scripts/take_screenshot.gd" id="2_5oejy"]
+[ext_resource type="Script" uid="uid://csdn8bb6nnk33" path="res://scripts/load_gltf.gd" id="2_acaik"]
+[ext_resource type="Script" uid="uid://csgb4v46cixeb" path="res://scripts/set_view_zoom.gd" id="2_v7vdx"]
+[ext_resource type="Script" uid="uid://b2xjfamjjjy5b" path="res://scripts/set_rot_model.gd" id="3_d7sxu"]
+[ext_resource type="Script" uid="uid://bb07j6f087vxe" path="res://scripts/set_animation_name.gd" id="3_ovwn0"]
+[ext_resource type="Script" uid="uid://bf1kt874i60fc" path="res://scripts/play_pause_animation.gd" id="4_7iiwk"]
+[ext_resource type="Script" uid="uid://8v02yk517h8v" path="res://scripts/set_pixel_size.gd" id="4_atqe7"]
+[ext_resource type="Script" uid="uid://daagtfvq2ahkn" path="res://scripts/set_animation_frame.gd" id="5_a37lv"]
+[ext_resource type="Script" uid="uid://chj8dqfqmh8jv" path="res://scripts/generate_frames.gd" id="5_gtgpg"]
+[ext_resource type="Script" uid="uid://c8hexuyofy6gv" path="res://scripts/state.gd" id="5_nee2x"]
+[ext_resource type="Script" uid="uid://dsc22uwmo4060" path="res://scripts/get_status.gd" id="5_v7vdx"]
+[ext_resource type="Script" uid="uid://2u1bqbvsdotl" path="res://scripts/set_output_folder.gd" id="6_ra7kh"]
+[ext_resource type="Script" uid="uid://cs8gxtt7neq3" path="res://scripts/set_frame_size.gd" id="6_x8rub"]
+[ext_resource type="Script" uid="uid://0vjpnop0a6bf" path="res://scripts/set_offset.gd" id="8_jndut"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i4801"]
+shader = ExtResource("1_qbwvd")
+
+[sub_resource type="Environment" id="Environment_sghk0"]
+background_mode = 1
+background_color = Color(1, 1, 1, 1)
+
+[sub_resource type="World3D" id="World3D_j6dmo"]
+environment = SubResource("Environment_sghk0")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sghk0"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.6, 0.6, 0.33333334, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="App" type="Node"]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_i4801")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+own_world_3d = true
+world_3d = SubResource("World3D_j6dmo")
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(150, 150)
+render_target_update_mode = 4
+
+[node name="Root" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+projection = 1
+current = true
+size = 4.0
+near = 0.001
+
+[node name="Window" type="Window" parent="."]
+oversampling_override = 1.0
+title = "(Geo3d2Image)"
+position = Vector2i(0, 36)
+size = Vector2i(640, 480)
+
+[node name="MarginContainer" type="MarginContainer" parent="Window"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LoadGLTF" type="Button" parent="Window/MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("root", "state")]
+layout_mode = 2
+text = "Load an GLTF Model"
+script = ExtResource("2_acaik")
+root = NodePath("../../../../../SubViewportContainer/SubViewport/Root")
+state = NodePath("../../../../../GlobalState")
+
+[node name="LoadFBX" type="Button" parent="Window/MarginContainer/VBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Load an Model FBX"
+
+[node name="AnimationName" type="LineEdit" parent="Window/MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("state")]
+layout_mode = 2
+placeholder_text = "Current Animation Name"
+alignment = 1
+clear_button_enabled = true
+script = ExtResource("3_ovwn0")
+state = NodePath("../../../../../GlobalState")
+
+[node name="PlayPauseAnimation" type="Button" parent="Window/MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("state", "animation_name")]
+layout_mode = 2
+text = "Play/Pause Animation"
+script = ExtResource("4_7iiwk")
+state = NodePath("../../../../../GlobalState")
+animation_name = NodePath("../AnimationName")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="GenerateFrames" type="Button" parent="Window/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("state", "interval_edit", "animation_name", "container", "width_edit", "height_edit")]
+layout_mode = 2
+text = "Generate Frames with Animation"
+script = ExtResource("5_gtgpg")
+state = NodePath("../../../../../../GlobalState")
+interval_edit = NodePath("../GenerateFrameInterval")
+animation_name = NodePath("../../AnimationName")
+container = NodePath("../../../../../../SubViewportContainer")
+width_edit = NodePath("../../../ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4/FrameWidth")
+height_edit = NodePath("../../../ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4/FrameHeight")
+
+[node name="Label" type="Label" parent="Window/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Frame Step"
+
+[node name="GenerateFrameInterval" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+min_value = 0.01
+step = 0.001
+value = 0.01
+
+[node name="OutputFolder" type="Button" parent="Window/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("state")]
+layout_mode = 2
+text = "Output Folder"
+script = ExtResource("6_ra7kh")
+state = NodePath("../../../../../../GlobalState")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Animation Current Frame"
+
+[node name="AnimationFrame" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("state")]
+layout_mode = 2
+step = 0.01
+script = ExtResource("5_a37lv")
+state = NodePath("../../../../../../GlobalState")
+
+[node name="TakeScreenshot" type="Button" parent="Window/MarginContainer/VBoxContainer/VBoxContainer" node_paths=PackedStringArray("container", "width_edit", "height_edit")]
+layout_mode = 2
+text = "Take Frame Screenshot"
+script = ExtResource("2_5oejy")
+container = NodePath("../../../../../SubViewportContainer")
+width_edit = NodePath("../../ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4/FrameWidth")
+height_edit = NodePath("../../ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4/FrameHeight")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "View Zoom"
+
+[node name="Zoom" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("camera")]
+layout_mode = 2
+min_value = 1.0
+step = 0.01
+value = 4.0
+script = ExtResource("2_v7vdx")
+camera = NodePath("../../../../../../../../SubViewportContainer/SubViewport/Camera3D")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Rotation(XYZ)"
+
+[node name="RotX" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("root")]
+layout_mode = 2
+min_value = -360.0
+max_value = 360.0
+script = ExtResource("3_d7sxu")
+root = NodePath("../../../../../../../../SubViewportContainer/SubViewport/Root")
+
+[node name="RotY" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("root")]
+layout_mode = 2
+min_value = -360.0
+max_value = 360.0
+script = ExtResource("3_d7sxu")
+mode = 1
+root = NodePath("../../../../../../../../SubViewportContainer/SubViewport/Root")
+
+[node name="RotZ" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer2" node_paths=PackedStringArray("root")]
+layout_mode = 2
+min_value = -360.0
+max_value = 360.0
+script = ExtResource("3_d7sxu")
+mode = 2
+root = NodePath("../../../../../../../../SubViewportContainer/SubViewport/Root")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Pixel Size"
+
+[node name="PixelSize" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+min_value = 0.005
+step = 0.001
+value = 4.0
+script = ExtResource("4_atqe7")
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Frame Size(XY)"
+
+[node name="FrameWidth" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4" node_paths=PackedStringArray("viewport")]
+layout_mode = 2
+min_value = 1.0
+max_value = 2048.0
+value = 150.0
+rounded = true
+script = ExtResource("6_x8rub")
+viewport = NodePath("../../../../../../../../SubViewportContainer/SubViewport")
+
+[node name="FrameHeight" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer4" node_paths=PackedStringArray("viewport")]
+layout_mode = 2
+min_value = 1.0
+max_value = 2048.0
+value = 150.0
+rounded = true
+script = ExtResource("6_x8rub")
+mode = 1
+viewport = NodePath("../../../../../../../../SubViewportContainer/SubViewport")
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "Offset(XY)"
+
+[node name="OffsetX" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer5" node_paths=PackedStringArray("camera")]
+layout_mode = 2
+min_value = -999.0
+max_value = 999.0
+script = ExtResource("8_jndut")
+camera = NodePath("../../../../../../../../SubViewportContainer/SubViewport/Camera3D")
+
+[node name="OffsetY" type="SpinBox" parent="Window/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer5" node_paths=PackedStringArray("camera")]
+layout_mode = 2
+min_value = -999.0
+max_value = 999.0
+script = ExtResource("8_jndut")
+mode = 1
+camera = NodePath("../../../../../../../../SubViewportContainer/SubViewport/Camera3D")
+
+[node name="PanelContainer" type="PanelContainer" parent="Window/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sghk0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Window/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_j6dmo")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Status" type="Label" parent="Window/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer" node_paths=PackedStringArray("state")]
+layout_mode = 2
+text = "---"
+script = ExtResource("5_v7vdx")
+state = NodePath("../../../../../../GlobalState")
+
+[node name="GlobalState" type="Node" parent="." node_paths=PackedStringArray("tool_window")]
+script = ExtResource("5_nee2x")
+tool_window = NodePath("../Window")
+metadata/_custom_type_script = "uid://c8hexuyofy6gv"
